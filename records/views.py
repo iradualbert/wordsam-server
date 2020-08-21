@@ -15,7 +15,7 @@ def word_search(request):
     if not user.is_authenticated:
         return JsonResponse({"error": "authentication were not provided"}, status=401)
     if not query:
-        return JsonResponse({'error': "enter search query"})
+        return JsonResponse({'error': "enter search query"}, status=400)
     offset = int(request.GET.get("offset", 0))
     limit = int(request.GET.get('limit', 10))
     qs = Word.objects.filter(Q(text__icontains=query)|Q(origin_title__icontains=query), user=user).distinct()
@@ -41,7 +41,7 @@ class WordViewSet(viewsets.ModelViewSet):
     permission_classes = [
       permissions.IsAuthenticated,
       ]
-      
+
     def get_queryset(self):
         user = self.request.user
         query = self.request.GET.get("query")
