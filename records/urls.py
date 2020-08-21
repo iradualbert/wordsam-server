@@ -9,4 +9,5 @@ router.register('api/words', views.WordViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
+    path('api/words/search', views.word_search),
 ]

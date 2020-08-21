@@ -3,8 +3,24 @@ from django.db.models import Q
 from django.contrib.auth.models import User
 from django.http.response import JsonResponse
 from rest_framework import viewsets, permissions
+from rest_framework.decorators import api_view
 from .models import List, Word
 from .serializers import ListSerializer, WordSerializer
+
+
+@api_view(["GET"])
+def word_search(request):
+    user = request.user
+    query = request.GET.get("query")
+    if not user.is_authenticated:
+        return JsonResponse({"error": "authentication were not provided"}, status=401)
+    if not query:
+        return JsonResponse({'error': "enter search query"})
+    offset = int(request.GET.get("offset", 0))
+    limit = int(request.GET.get('limit', 10))
+    qs = Word.objects.filter(Q(text__icontains=query)|Q(origin_title__icontains=query), user=user).distinct()
+    results = WordSerializer(qs, many=True).data
+    return JsonResponse({"results": results}, status=200)
 
 
 class ListViewSet(viewsets.ModelViewSet):
@@ -25,6 +41,7 @@ class WordViewSet(viewsets.ModelViewSet):
     permission_classes = [
       permissions.IsAuthenticated,
       ]
+      
     def get_queryset(self):
         user = self.request.user
         query = self.request.GET.get("query")
