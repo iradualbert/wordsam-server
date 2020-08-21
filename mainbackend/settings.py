@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 import os
 from pathlib import Path
-
+import django_heroku
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 
@@ -25,7 +25,7 @@ SECRET_KEY = 'crq4i0hfvd)0)of-nedu%!ya^1x2oc^_#)d@93%t@wpt-h_&+5'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -164,3 +164,5 @@ REST_KNOX = {
 }
 
 AUTHENTICATION_BACKENDS = ('accounts.auth.backend_auth.EmailBackend',)
+# Activate Django-Heroku.
+django_heroku.settings(locals())
