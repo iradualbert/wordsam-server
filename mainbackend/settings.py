@@ -82,24 +82,16 @@ WSGI_APPLICATION = 'mainbackend.wsgi.application'
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        #'NAME': BASE_DIR / 'db.sqlite3',
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.environ.get('NAME', 'wordsam'),
+            'USER': os.environ.get('USER', 'postgres'),
+            'PASSWORD': os.environ.get('PASSWORD', 'albe4040'),
+            'HOST': os.environ.get('HOST', 'localhost'),
+            'PORT': os.environ.get('PORT', '5432')
+        }
     }
-}
 
-db_url = os.environ.get('DATABASE_URL', None)
-if not db_url:
-    DATABASES['default']['ENGINE'] = 'django.db.backends.sqlite3'
-    DATABASES['default']["NAME"] = BASE_DIR / 'db.sqlite3'
-
-else:
-    DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'DATABASE_URL': db_url,
-    }
-}
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
@@ -176,5 +168,4 @@ REST_KNOX = {
 }
 
 AUTHENTICATION_BACKENDS = ('accounts.auth.backend_auth.EmailBackend',)
-# Activate Django-Heroku.
 django_heroku.settings(locals())
